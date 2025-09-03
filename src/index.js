@@ -19,9 +19,9 @@ app.use(express.json());
 
 app.use("/api/v1", router);
 dbConnector;
-const PORT = process.env.PORT || 4200;
+const PORT = process.env.MONGOPORT || 4200;
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.MONGOPORT, () => {
   console.log(`🚀 Server running on port: http://localhost:${PORT}`);
 });
 
