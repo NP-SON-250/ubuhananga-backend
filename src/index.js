@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 
-// Root endpoint (should be BEFORE listen)
+// Root endpoint
 app.get("/", (req, res) => {
   res.status(200).json({
     status: "success",
@@ -35,7 +35,7 @@ app.use("/api/v1", router);
 dbConnector();
 
 // Use Railway’s PORT in production
-const PORT = process.env.PORT || 4200;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port: http://localhost:${PORT}`);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Server running on http://0.0.0.0:${PORT}`);
 });
