@@ -9,6 +9,9 @@ import cors from "cors";
 dotenv.config();
 const app = express();
 
+// Trust proxy (important for Railway HTTPS)
+app.set("trust proxy", 1);
+
 // Middlewares
 app.use(cors());
 app.use(morgan("dev"));
@@ -16,24 +19,23 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 
-// API routes
-app.use("/api/v1", router);
-
-// Database connection
-dbConnector();
-
-// Use Railway’s PORT in production, fallback to .env PORT locally
-const PORT = process.env.PORT || 4200;
-
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port: http://localhost:${PORT}`);
-});
-
-// Root endpoint
+// Root endpoint (should be BEFORE listen)
 app.get("/", (req, res) => {
   res.status(200).json({
     status: "success",
     author: "Ubuhanga Congozi",
     message: "Welcome to Ubuhanga APIs!",
   });
+});
+
+// API routes
+app.use("/api/v1", router);
+
+// Database connection
+dbConnector();
+
+// Use Railway’s PORT in production
+const PORT = process.env.PORT || 4200;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port: http://localhost:${PORT}`);
 });
