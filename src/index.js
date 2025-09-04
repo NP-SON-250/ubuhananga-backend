@@ -6,10 +6,8 @@ import dbConnector from "./app.js";
 import morgan from "morgan";
 import cors from "cors";
 
-
 const app = express();
 dotenv.config();
-
 
 app.use(cors());
 app.use(morgan("dev"));
