@@ -15,7 +15,7 @@ export const uploadToCloud = async (file) => {
     });
     return univeUploads;
   } catch (error) {
-    console.log(:"Railway Secret",process.env.API_SECRET);
+    console.log("Railway Secret",process.env.API_SECRET);
     throw new Error("Failed to upload to Cloudinary");
   }
 };
