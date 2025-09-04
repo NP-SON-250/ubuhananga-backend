@@ -7,39 +7,7 @@ import generateToken from "../utils/generateToken";
 import Users from "../models/Congozi.users.model";
 import bcrypt from "bcrypt";
 import { uploadToCloud } from "../helper/cloud";
-export const updateUser = async (req, res) => {
-  const { error, value } = validateUpdateUser(req.body);
-  if (error) {
-    return res.status(400).json({ message: error.details[0].message });
-  }
 
-  try {
-    const { id } = req.params;
-
-    if (req.file) {
-      // Upload new profile image to Cloudinary
-      const imageResult = await uploadToCloud(req.file);
-      if (imageResult?.secure_url) {
-        value.profile = imageResult.secure_url;
-      }
-    }
-
-    // Call your service to update DB
-    const updatedUser = await userService.updateUser(id, value);
-
-    return res.status(200).json({
-      message: "User updated",
-      data: updatedUser,
-    });
-  } catch (error) {
-    console.error("Error updating user:", error.message);
-    res.status(500).json({
-      status: "500",
-      message: "Habayemo ikibazo kidasanzwe",
-      error: `Error updating user: ${error.message}`,
-    });
-  }
-};
 export const createUsers = async (req, res, file) => {
   const {
     fName,
@@ -133,6 +101,28 @@ export const createUsers = async (req, res, file) => {
       status: "500",
       message: "Habayemo ikibazo kidasanzwe",
       error: err.message,
+    });
+  }
+};
+export const updateUser = async (req, res) => {
+  const { error, value } = validateUpdateUser(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
+
+  try {
+    const { id } = req.params;
+    const updatedUser = await userService.updateUser(id, value, req.file);
+
+    return res.status(200).json({
+      message: "User updated",
+      data: updatedUser,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "500",
+      message: "Habayemo ikibazo kidasanzwe",
+      error: error.message,
     });
   }
 };
