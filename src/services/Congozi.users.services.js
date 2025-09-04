@@ -3,26 +3,16 @@ import bcrypt from "bcrypt";
 import { uploadToCloud } from "../helper/cloud";
 
 // Service to update a user
-export const updateUser = async (id, userData, file) => {
+export const updateUser = async (id, data) => {
   try {
-    const user = await Users.findById(id);
-    if (!user) {
-      throw new Error("User not found");
-    }
-    if (file) {
-      const result = await uploadToCloud(file);
-      userData.profile = result.secure_url;
-    }
-    if (userData.password) {
-      const saltRounds = 10;
-      userData.password = await bcrypt.hash(userData.password, saltRounds);
-    }
-    const updatedUser = await Users.findByIdAndUpdate(id, userData, {
+    const updatedUser = await Users.findByIdAndUpdate(id, data, {
       new: true,
+      runValidators: true,
     });
+    if (!updatedUser) throw new Error("User not found");
     return updatedUser;
   } catch (error) {
-    throw new Error(`Error updating user: ${error.message}`);
+    throw new Error(error.message || "Database update failed");
   }
 };
 // Service to Login a user with tin or companyName
